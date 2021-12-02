@@ -1,34 +1,33 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import * as React from "react";
+import "./styles.css";
 
-const App: React.FC = () => {
+export default function App() {
+  const [users, setUsers] = React.useState([]);
+  const f = async () => {
+    const res = await fetch("https://reqres.in/api/users/");
+    const json = await res.json();
+    setUsers(json.data);
+  };
+  React.useEffect(() => {
+    f();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          <a
-            className="App-link"
-            href="https://coletiv.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Coletiv
-          </a>{" "}
-          companion website for the Github Actions example
-        </p>
-        <a
-          className="App-link"
-          href="https://github.com/coletiv/react-js-github-actions-example"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Github Repository
-        </a>
-      </header>
+      <h1>Hello ReqRes users!</h1>
+      <div className="flex">
+        {users.length &&
+          users.map((user) => {
+            return (
+              <div key={user.id}>
+                <p>
+                  <strong>{user.first_name}</strong>
+                </p>
+                <p>{user.email}</p>
+                <img key={user.avatar} src={user.avatar} />
+              </div>
+            );
+          })}
+      </div>
     </div>
   );
-};
-
-export default App;
+}
